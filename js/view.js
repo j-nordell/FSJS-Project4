@@ -7,13 +7,18 @@ function View(html, displayState, viewElement) {
 }
 
 View.prototype.toggleDisplay = function() {
-    if(this.displayState == "none") {
+   if(this.displayState == "none") {
         this.viewElement.style.display = "block";
     } else {
-        this.viewElement.style.display = "none";
+        this.viewElement.style.display = "none"; 
     }
 };
 
 View.prototype.renderInElement = function() {
     this.viewElement.innerHTML = this.html;
 };
+
+
+View.prototype.bindUIActions = function(element, event, actions) {
+    element.addEventListener(event, actions);
+}
