@@ -1,24 +1,25 @@
-'use strict';
-
-function View(html, displayState, viewElement) {
+class View {
+    constructor(html) {
+    "use strict";
     this.html = html;
-    this.displayState = displayState;
-    this.viewElement = viewElement;
-}
-
-View.prototype.toggleDisplay = function() {
-   if(this.displayState == "none") {
-        this.viewElement.style.display = "block";
-    } else {
-        this.viewElement.style.display = "none"; 
+    this.displayState = "none";
+    this.viewElement = document.getElementById("board");
     }
-};
 
-View.prototype.renderInElement = function() {
-    this.viewElement.innerHTML = this.html;
-};
+    toggleDisplay() {
+        if (this.displayState === "none") {
+            this.viewElement.style.display = "block";
+        } else {
+            this.viewElement.style.display = "none";
+        }
+    }
 
+    renderInElement() {
+        this.viewElement.innerHTML = this.html;
+    }
 
-View.prototype.bindUIActions = function(element, event, actions) {
-    element.addEventListener(event, actions);
+    bindUIActions(element, event, actions) {
+        "use strict";
+        element.addEventListener(event, actions);
+    }
 }
