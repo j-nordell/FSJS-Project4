@@ -7,7 +7,7 @@
 // Hi there, Benoit!  I'm going to show you how to do this
 // Now I save my file
 // See the 1 over there?  Let's press it
-
+// hrmmm
 
 const board = document.getElementById("board");
 const startHTML = `<div class="screen screen-start" id="start"><header><h1>Tic Tac Toe</h1><a href="#" class="button" id="start-button">Start game</a></header></div>`;
