@@ -40,7 +40,31 @@ class Game {
         let col = id % 3;
         let row = parseInt(id / 3);
         this.matrix[row][col] = game.activePlayer;
-        console.log(this.matrix);
+     }
+
+    checkWin() {
+       for(let i = 0; i < 3; i++) {
+            if(this.matrix[i][0] == this.matrix[i][1] && this.matrix[i][1] == this.matrix[i][2] && this.matrix[i][0] != 0) {
+               this.gameWinner = this.matrix[i][0];
+            }
+            for(let j = 0; j < 3; j++) {
+                if(this.matrix[0][j] == this.matrix[1][j] && this.matrix[1][j] == this.matrix[2][j] && this.matrix[0][j] != 0) {
+                    this.gameWinner = this.matrix[0][j];
+                }
+            }
+       }
+
+       if(this.matrix[0][0] == this.matrix[1][1] && this.matrix[2][2] && this.matrix != 0) {
+           this.gameWinner = this.matrix[0][0];
+       }
+
+       if(this.matrix[0][2] == this.matrix[1][1] && this.matrix[1][1] == this.matrix[2][0] && this.matrix != 0) {
+           game.gameWinner = this.matrix[0][2];
+       } 
+       
+       if(this.gameWinner) {
+           console.log(this.gameWinner.name);
+       }
     }
 }
 
@@ -77,9 +101,10 @@ class View {
  }
 
 /**********************/
-/* Instances          */
+/* View Instances     */
 /**********************/
 
+// View to start the game
 let startView = new View(`
     <div class="screen screen-start" id="start">
         <header>
@@ -88,6 +113,7 @@ let startView = new View(`
         </header>
     </div>`, "start");
 
+// The game board view    
 let gameView = new View(`
     <div class="board" id="board">
         <header>
@@ -114,6 +140,7 @@ let gameView = new View(`
         </ul>
     </div>`, "board");
 
+// The view presenting the win screen
 let finishView = new View(`
     <div class="screen screen-win" id="finish">
         <header>
@@ -131,6 +158,7 @@ startView.addHTML();
 gameView.addHTML();
 finishView.addHTML();
 
+// Turn off game view and finish view
 gameView.toggleView();
 finishView.toggleView();
 
@@ -169,6 +197,10 @@ function markSquare(element) {
     game.activePlayer == game.player1 ? gameView.highlightPlayer(playerOneBox) : gameView.highlightPlayer(playerTwoBox);
     element.target.style.pointerEvents ="none";
     game.movesCount++;
+    game.checkWin();
+    if(game.gameWinner || game.movesCount == 9) {
+        showFinish();
+    }
 }
 
 function highlightBox(element) {
@@ -177,5 +209,10 @@ function highlightBox(element) {
 
 function clearHighlight(element) {
     element.target.style.backgroundImage = "";
+}
+
+function showFinish() {
+    gameView.toggleView();
+    finishView.toggleView();
 }
 
