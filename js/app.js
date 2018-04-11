@@ -19,7 +19,7 @@ class Player {
 class Game {
     constructor() {
         this.gameOver = false;
-        this.gameWinner = null;
+        this.gameWinner = 0;
         this.movesCount = 0;
         this.matrix = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
         this.player1 = new Player("Player 1", "human", `url("img/o.svg")`);
@@ -60,11 +60,7 @@ class Game {
                     this.gameWinner = this.matrix[0][j];
                 }
             }
-       }
-      
-       if(this.gameWinner) {
-           console.log(this.gameWinner.name);
-       }
+       }   
     }
 }
 
@@ -97,6 +93,25 @@ class View {
      
      unhighlightPlayer(playerBox) {
          playerBox.classList.remove("active");
+     }
+
+     // Specifically for adding appropriate CSS classes based on winner/tie
+     addWinClass() {
+         let winDiv = document.getElementById('finish'); 
+         if(game.gameWinner == 0) {
+             winDiv.classList.add("screen-win-tie");
+         } else if(game.gameWinner == game.player1) {
+             winDiv.classList.add("screen-win-one");   
+         } else {
+             winDiv.classList.add("screen-win-two");
+         }
+     }
+
+     // Specifically for showing win/tie message on finish view
+     showWinMessage() {
+         let winMessage = document.getElementsByClassName("message")[0];
+         let message = game.gameWinner == 0 ? "It's a tie!" : "Winner!";
+         winMessage.textContent = message;
      }
  }
 
@@ -199,6 +214,8 @@ function markSquare(element) {
     game.movesCount++;
     game.checkWin();
     if(game.gameWinner || game.movesCount == 9) {
+        finishView.addWinClass();
+        finishView.showWinMessage();
         showFinish();
     }
 }
