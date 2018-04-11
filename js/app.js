@@ -95,7 +95,7 @@ class View {
          playerBox.classList.remove("active");
      }
 
-     // Specifically for adding appropriate CSS classes based on winner/tie
+     // Specifically for adding appropriate CSS classes based on winner/tie on finish view
      addWinClass() {
          let winDiv = document.getElementById('finish'); 
          if(game.gameWinner == 0) {
