@@ -43,25 +43,25 @@ class Game {
      }
 
     checkWin() {
+        // Check for diagonal win. If true, game winner is one with middle box marked
+        if((this.matrix[0][0] == this.matrix[1][1] && this.matrix[2][2] && this.matrix != 0) || 
+            (this.matrix[0][2] == this.matrix[1][1] && this.matrix[1][1] == this.matrix[2][0] && this.matrix != 0)) {
+                this.gameWinner = this.matrix[1][1];
+        }
+
        for(let i = 0; i < 3; i++) {
+           // Check for row win
             if(this.matrix[i][0] == this.matrix[i][1] && this.matrix[i][1] == this.matrix[i][2] && this.matrix[i][0] != 0) {
                this.gameWinner = this.matrix[i][0];
             }
             for(let j = 0; j < 3; j++) {
+                // Check for column win
                 if(this.matrix[0][j] == this.matrix[1][j] && this.matrix[1][j] == this.matrix[2][j] && this.matrix[0][j] != 0) {
                     this.gameWinner = this.matrix[0][j];
                 }
             }
        }
-
-       if(this.matrix[0][0] == this.matrix[1][1] && this.matrix[2][2] && this.matrix != 0) {
-           this.gameWinner = this.matrix[0][0];
-       }
-
-       if(this.matrix[0][2] == this.matrix[1][1] && this.matrix[1][1] == this.matrix[2][0] && this.matrix != 0) {
-           game.gameWinner = this.matrix[0][2];
-       } 
-       
+      
        if(this.gameWinner) {
            console.log(this.gameWinner.name);
        }
