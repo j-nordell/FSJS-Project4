@@ -120,6 +120,7 @@ class View {
  
     addHTML() {
         document.write(this.html);
+        //document.getElementById("wrapper").innerHTML = this.html;
     }
  
     toggleView() {
@@ -172,7 +173,6 @@ setUpViews();
 // Load start screen
 switchToStart();
 
-
 // Constants for UI elements
 const startButton = document.getElementById("start-button");
 const newGameButton = document.getElementById("new-game");
@@ -217,8 +217,7 @@ function setUpViews() {
 game.startView.bindUIActions(startButton, "click", switchToGame);
 game.finishView.bindUIActions(newGameButton, "click", () => {
     game = new Game();
-    setUpViews();
-    switchToStart();
+    window.location.reload();
 });
 
 // Functions to highlight and clear highlights from boxes
