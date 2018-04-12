@@ -131,7 +131,7 @@ class View {
         let element = document.getElementById(this.id);
         element.style.display = "none";
     }
- 
+
     bindUIActions(element, eventType, action) {
         element.addEventListener(eventType, action);
     }
@@ -175,7 +175,7 @@ let game = new Game();
 setUpViews();
 
 // Load start screen
-switchToStart();
+displayView(game.startView);
 
 // Constants for UI elements
 const startButton = document.getElementById("start-button");
@@ -191,29 +191,6 @@ for(let square of squares) {
     game.gameView.bindUIActions(square, "click", markSquare);
 }
 
-console.log(squares[2]);
-
-// Function to switch to Start View from any other view
-function switchToStart() {
-    game.finishView.switchOff();
-    game.gameView.switchOff();
-    game.startView.switchOn();
-}
-
-// Function to switch to Game view from any other view
-function switchToGame() {
-    game.startView.switchOff();
-    game.finishView.switchOff();
-    game.gameView.switchOn();
-    game.gameView.highlightPlayer(document.getElementById("player1"));
-}
-
-// Function to switch to finish on game end
-function switchToFinish() {
-    game.startView.switchOff();
-    game.gameView.switchOff();
-    game.finishView.switchOn();
-}
 
 // Function to set up the views
 function setUpViews() {
@@ -222,12 +199,35 @@ function setUpViews() {
     game.finishView.addHTML();
 }
 
+function displayView(viewToShow) {
+    switch(viewToShow) {
+        case game.startView:
+            game.finishView.switchOff();
+            game.gameView.switchOff();
+            game.startView.switchOn();
+            break;
+        case game.gameView:
+            game.startView.switchOff();
+            game.finishView.switchOff();
+            game.gameView.switchOn();
+            game.gameView.highlightPlayer(document.getElementById("player1"));
+            break;
+        case game.finishView:
+            game.startView.switchOff();
+            game.gameView.switchOff();
+            game.finishView.switchOn();
+    }
+}
+
 // Make start game clickable and go to game view
-game.startView.bindUIActions(startButton, "click", switchToGame);
-game.finishView.bindUIActions(newGameButton, "click", function() {
+game.startView.bindUIActions(startButton, "click", () => {
+    displayView(game.gameView);
+});
+
+game.finishView.bindUIActions(newGameButton, "click", () => {
     alert("hi");
     resetBoard();
-    switchToGame();
+    displayView(game.gameView);
 });
 
 // Functions to highlight and clear highlights from boxes
@@ -253,7 +253,8 @@ function markSquare(element) {
         game.finishView.addWinClass();
         game.finishView.showWinMessage();
         if(game.gameWinner == 0) alert("WOAH!");
-        switchToFinish();
+        //switchToFinish();
+        displayView(game.finishView);
     }
 }
 
