@@ -120,12 +120,16 @@ class View {
  
     addHTML() {
         document.write(this.html);
-        //document.getElementById("wrapper").innerHTML = this.html;
     }
  
-    toggleView() {
-         let element = document.getElementById(this.id);
-         element.style.display = element.style.display == "none" ? "block" : "none";
+    switchOn() {
+        let element = document.getElementById(this.id);
+        element.style.display = "block";
+    }
+
+    switchOff() {
+        let element = document.getElementById(this.id);
+        element.style.display = "none";
     }
  
     bindUIActions(element, eventType, action) {
@@ -187,23 +191,28 @@ for(let square of squares) {
     game.gameView.bindUIActions(square, "click", markSquare);
 }
 
-// Function to switch to Start View from Finish view
+console.log(squares[2]);
+
+// Function to switch to Start View from any other view
 function switchToStart() {
-    game.finishView.toggleView();
-    game.gameView.toggleView();
+    game.finishView.switchOff();
+    game.gameView.switchOff();
+    game.startView.switchOn();
 }
 
-// Function to switch to Game view from "Start game"
+// Function to switch to Game view from any other view
 function switchToGame() {
-    game.startView.toggleView();
-    game.gameView.toggleView();
+    game.startView.switchOff();
+    game.finishView.switchOff();
+    game.gameView.switchOn();
     game.gameView.highlightPlayer(document.getElementById("player1"));
 }
 
 // Function to switch to finish on game end
 function switchToFinish() {
-    game.gameView.toggleView();
-    game.finishView.toggleView();
+    game.startView.switchOff();
+    game.gameView.switchOff();
+    game.finishView.switchOn();
 }
 
 // Function to set up the views
@@ -215,9 +224,10 @@ function setUpViews() {
 
 // Make start game clickable and go to game view
 game.startView.bindUIActions(startButton, "click", switchToGame);
-game.finishView.bindUIActions(newGameButton, "click", () => {
-    game = new Game();
-    window.location.reload();
+game.finishView.bindUIActions(newGameButton, "click", function() {
+    alert("hi");
+    resetBoard();
+    switchToGame();
 });
 
 // Functions to highlight and clear highlights from boxes
@@ -236,14 +246,26 @@ function markSquare(element) {
     game.updateMatrix(element.target.id);
     game.swapPlayer();
     game.activePlayer == game.player1 ? game.gameView.highlightPlayer(playerOneBox) : game.gameView.highlightPlayer(playerTwoBox);
-    element.target.style.pointerEvents ="none";
+    element.target.style.pointerEvents = "none";
     game.movesCount++;
     game.checkWin();
     if(game.gameWinner || game.movesCount == 9) {
         game.finishView.addWinClass();
         game.finishView.showWinMessage();
+        if(game.gameWinner == 0) alert("WOAH!");
         switchToFinish();
     }
+}
+
+function resetBoard() {
+    game.matrix = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+    game.movesCount = 0;
+    game.gameWinner = 0;
+    for(let square of squares) {
+        square.classList.remove("box-filled-1", "box-filled-2");
+        square.style.pointerEvents = "auto";
+    }
+    console.log(game.matrix);
 }
 
 
