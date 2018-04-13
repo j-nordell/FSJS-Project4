@@ -150,7 +150,8 @@ class View {
 
      // Specifically for adding appropriate CSS classes based on winner/tie on finish view
      addWinClass() {
-         let winDiv = document.getElementById('finish'); 
+         let winDiv = document.getElementById('finish');
+         winDiv.classList.remove("screen-win-tie", "screen-win-one", "screen-win-two"); 
          if(game.gameWinner == 0) {
              winDiv.classList.add("screen-win-tie");
          } else if(game.gameWinner == game.player1) {
@@ -225,7 +226,6 @@ game.startView.bindUIActions(startButton, "click", () => {
 });
 
 game.finishView.bindUIActions(newGameButton, "click", () => {
-    alert("hi");
     resetBoard();
     displayView(game.gameView);
 });
@@ -252,8 +252,6 @@ function markSquare(element) {
     if(game.gameWinner || game.movesCount == 9) {
         game.finishView.addWinClass();
         game.finishView.showWinMessage();
-        if(game.gameWinner == 0) alert("WOAH!");
-        //switchToFinish();
         displayView(game.finishView);
     }
 }
@@ -266,7 +264,6 @@ function resetBoard() {
         square.classList.remove("box-filled-1", "box-filled-2");
         square.style.pointerEvents = "auto";
     }
-    console.log(game.matrix);
 }
 
 
