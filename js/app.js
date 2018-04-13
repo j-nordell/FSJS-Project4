@@ -214,6 +214,7 @@ function displayView(viewToShow) {
             game.startView.switchOn();
             break;
         case game.gameView:
+            game.activePlayer == game.player1 ? game.gameView.unhighlightPlayer(playerOneBox) : game.gameView.unhighlightPlayer(playerTwoBox);
             game.startView.switchOff();
             game.finishView.switchOff();
             game.gameView.switchOn();
@@ -230,8 +231,7 @@ function displayView(viewToShow) {
 // Make start game clickable and go to game view
 game.startView.bindUIActions(startButton, "click", () => {
     game.player1.name = !playerNameInput.value ? "Human" : playerNameInput.value;
-    console.log(game.player1.name);
-    displayView(game.gameView);
+     displayView(game.gameView);
 });
 
 game.finishView.bindUIActions(newGameButton, "click", () => {
@@ -265,6 +265,7 @@ function markSquare(element) {
     }
 }
 
+// Reset the game board and game defaults
 function resetBoard() {
     game.matrix = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
     game.movesCount = 0;
