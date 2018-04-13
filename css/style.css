@@ -138,4 +138,33 @@ h1 {
       background-color: #3688C3;
       background-image: url(../img/x.svg); }
 
+/* Custom CSS by Jennifer */
+.username {
+  margin: 0 auto;
+  width: 20%;
+  height: 15%;
+	font-size: 16px;
+	font-weight: 300;
+  padding-top: 55px;
+  transition: opacity .5s ease, transform .5s ease;
+}
+
+.input-styling {
+  width: 100%;
+  height: 35px;
+	padding-left: 15px;
+	border: none;
+	border-radius: 20px;
+  margin-bottom: 20px;
+  background: rgba(255, 255, 255, 0.849);
+}
+
+label {
+  text-transform: uppercase;
+  color: #FFF;
+}
+
+h2 {
+  text-align: center;
+}
 
