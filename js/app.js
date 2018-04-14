@@ -12,7 +12,7 @@
 const startHTML = `<div class="screen screen-start" id="start">
                         <header>
                             <h1>Tic Tac Toe</h1>
-                            <form class="username" onSubmit="displayView(game.gameView)" name="form">
+                            <form class="username" name="form">
                                 <label for="username">Your name</label>
                                 <input class="input-styling" type="text" name="username" id="username" placeholder=""/>
                             </form>
@@ -59,7 +59,7 @@ const finishHTML = ` <div class="screen screen-win" id="finish">
 /********************/
 
 class Player {
-    constructor(name, type, icon) {
+    constructor(name, icon) {
         this.name = name;
         this.icon = icon;
     }
@@ -231,7 +231,13 @@ function displayView(viewToShow) {
 // Make start game clickable and go to game view
 game.startView.bindUIActions(startButton, "click", () => {
     game.player1.name = !playerNameInput.value ? "Human" : playerNameInput.value;
-     displayView(game.gameView);
+    displayView(game.gameView);
+});
+
+game.startView.bindUIActions(document.getElementsByTagName("form")[0], "submit", (e) => {
+    e.preventDefault();
+    game.player1.name = !playerNameInput.value ? "Human" : playerNameInput.value;
+    displayView(game.gameView);
 });
 
 game.finishView.bindUIActions(newGameButton, "click", () => {
@@ -263,6 +269,7 @@ function markSquare(element) {
         game.finishView.addWinClass();
         game.finishView.showWinMessage();
         displayView(game.finishView);
+        return;
     }
 
     if(game.activePlayer == game.player2) {
@@ -281,6 +288,7 @@ function resetBoard() {
     }
 }
 
+// Return a random available square
 function getRandomSquare() {
     let row = randomIndex();
     let col = randomIndex();
@@ -289,7 +297,6 @@ function getRandomSquare() {
         row = randomIndex();
         col = randomIndex();
     }
-
     return squares[row * 3 + col];
 }
 
