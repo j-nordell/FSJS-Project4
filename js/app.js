@@ -13,8 +13,12 @@ const startHTML = `<div class="screen screen-start" id="start">
                         <header>
                             <h1>Tic Tac Toe</h1>
                             <form class="username" name="form">
-                                <label for="username">Your name</label>
-                                <input class="input-styling" type="text" name="username" id="username" placeholder=""/>
+                                <label for="username1">Player 1</label>
+                                <input class="input-styling" type="text" name="username" id="username1" placeholder="" tabindex="1"/>
+                                <label for="username2">Player 2</label>
+                                <input class="input-styling" type="text" name="username" id="username2" placeholder="" tabindex="2"/>
+                                <input type="checkbox" id="computer-check" name="computer-check" value="computer">
+                                <label for="computer-check">Player 2 is Computer controlled</label>
                             </form>
                             <a href="#" class="button" id="start-button">Start game</a>
                         </header>
@@ -59,16 +63,17 @@ const finishHTML = ` <div class="screen screen-win" id="finish">
 /********************/
 
 class Player {
-    constructor(name, icon) {
+    constructor(name, icon, human) {
         this.name = name;
         this.icon = icon;
+        this.human = human;
     }
 }
 
 class Game {
     constructor() {
-        this.player1 = new Player("Player 1", `url("img/o.svg")`);
-        this.player2 = new Player("Computer", `url("img/x.svg")`);
+        this.player1 = new Player("Player 1", `url("img/o.svg")`, true);
+        this.player2 = new Player("Computer", `url("img/x.svg")`, true);
         this.activePlayer = this.player1;
         this.startView = new View(startHTML, "start");
         this.gameView = new View(gameHTML, "board");
@@ -189,8 +194,9 @@ const newGameButton = document.getElementById("new-game");
 const playerOneBox = document.getElementById("player1");
 const playerTwoBox = document.getElementById("player2");
 const squares = document.getElementsByClassName("box");
-const playerNameInput = document.getElementById("username");
-
+const player1NameInput = document.getElementById("username1");
+const player2NameInput = document.getElementById("username2");
+const computerCheck = document.getElementById("computer-check");
 
 // Get squares on game board and bind actions
 for(let square of squares) {
@@ -220,8 +226,8 @@ function displayView(viewToShow) {
             game.finishView.switchOff();
             game.gameView.switchOn();
             game.gameView.highlightPlayer(game.activePlayer == game.player1 ? playerOneBox : playerTwoBox);
-            document.getElementsByTagName('h2')[0].textContent = `${game.player1.name} vs ${game.player2.name}`;
-            if(game.activePlayer == game.player2) {
+            document.getElementsByTagName('h2')[0].innerHTML = `<span class="player1">${game.player1.name}</span> vs <span class="player2">${game.player2.name}</span>`;
+            if(game.activePlayer == game.player2 && !game.player2.human) {
                 getRandomSquare().click();
             }
             break;
@@ -234,22 +240,29 @@ function displayView(viewToShow) {
 
 // Make start game clickable and go to game view
 game.startView.bindUIActions(startButton, "click", () => {
-    game.player1.name = !playerNameInput.value ? "Human" : playerNameInput.value;
+    getPlayerInfo();
     displayView(game.gameView);
 });
 
-// Grab the player's name from the input
-game.startView.bindUIActions(document.getElementsByTagName("form")[0], "submit", (e) => {
-    e.preventDefault();
-    game.player1.name = !playerNameInput.value ? "Human" : playerNameInput.value;
-    displayView(game.gameView);
-});
 
 // Make the new game button clickable and load the game board
 game.finishView.bindUIActions(newGameButton, "click", () => {
     resetBoard();
     displayView(game.gameView);
 });
+
+// Function to get player information
+function getPlayerInfo() {
+    game.player1.name = !player1NameInput.value ? "Player 1" : player1NameInput.value;
+    game.player2.human = !computerCheck.checked;
+    if(!player2NameInput.value && game.player2.human) {
+        game.player2.name = "Player 2";
+    } else if(!player2NameInput.value && !game.player2.human) {
+        game.player2.name = "Computer";
+    } else {
+        game.player2.name = player2NameInput.value;
+    }
+}
 
 // Functions to highlight and clear highlights from boxes
 function highlightBox(element) {
@@ -278,7 +291,7 @@ function markSquare(element) {
         return;
     }
 
-    if(game.activePlayer == game.player2) {
+    if(game.activePlayer == game.player2 && !game.player2.human) {
         getRandomSquare().click();
     }
 }
@@ -294,13 +307,13 @@ function resetBoard() {
 
 // Return a random available square
 function getRandomSquare() {
-    let row = randomIndex();
-    let col = randomIndex();
-    
-    while(game.matrix[row][col] != 0) {
+    let row;
+    let col;
+    do {
         row = randomIndex();
         col = randomIndex();
-    }
+    } while(game.matrix[row][col] != 0)
+ 
     return squares[row * 3 + col];
 }
 

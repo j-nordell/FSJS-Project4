@@ -170,3 +170,17 @@ h2 {
   text-align: center;
 }
 
+.player1,
+.player2 {
+  padding: 5px 20px;
+  background-color: #FFA000;
+  color: #fff; 
+  border-radius: 15px;
+}
+
+.player1 {
+  background-color: #FFA000;
+}
+.player2 {
+  background-color: #3688C3;
+}
