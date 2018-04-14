@@ -174,7 +174,7 @@ class View {
     // Specifically for showing win/tie message on finish view
     showWinMessage() {
         let winMessage = document.getElementsByClassName("message")[0];
-        let message = game.gameWinner == 0 ? "It's a tie!" : `${game.gameWinner.name} Wins!`;
+        let message = game.gameWinner == 0 ? "It's a tie!" : `Winner: ${game.gameWinner.name}!`;
         winMessage.textContent = message;
     }
  }
