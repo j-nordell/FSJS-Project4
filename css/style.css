@@ -141,6 +141,7 @@ h1 {
 /* Custom CSS by Jennifer */
 .username {
   margin: 0 auto;
+  margin-bottom: 20px;
   width: 20%;
   height: 15%;
 	font-size: 16px;
@@ -154,7 +155,7 @@ h1 {
   height: 35px;
   border: none;
   box-sizing: border-box;
-  padding: 0 15p;
+  padding: 0 15px;
 	border-radius: 15px;
   margin-bottom: 20px;
   background: rgba(255, 255, 255, 0.849);

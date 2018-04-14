@@ -263,6 +263,9 @@ function markSquare(element) {
         game.finishView.showWinMessage();
         displayView(game.finishView);
     }
+    if(game.activePlayer == game.player2) {
+        let randomSquare = getRandomSquare();
+    }
 }
 
 // Reset the game board and game defaults
@@ -276,6 +279,12 @@ function resetBoard() {
     }
 }
 
+function getRandomSquare() {
+    let randomNumber = Math.floor(Math.random() * 9);
+    let randomSquare = game.matrix[randomNumber / 3][randomNumber % 3];
+    console.log(randomSquare);
+    return randomSquare;
+}
 
 
 
