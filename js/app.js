@@ -14,9 +14,9 @@ const startHTML = `<div class="screen screen-start" id="start">
                             <h1>Tic Tac Toe</h1>
                             <form class="username" name="form">
                                 <label for="username1">Player 1</label>
-                                <input class="input-styling" type="text" name="username" id="username1" placeholder="" tabindex="1"/>
+                                <input class="input-styling" type="text" name="username" id="username1" placeholder="" tabindex="1" maxlength="10" />
                                 <label for="username2">Player 2</label>
-                                <input class="input-styling" type="text" name="username" id="username2" placeholder="" tabindex="2"/>
+                                <input class="input-styling" type="text" name="username" id="username2" placeholder="" tabindex="2" maxlength="10" />
                                 <input type="checkbox" id="computer-check" name="computer-check" value="computer">
                                 <label for="computer-check">Player 2 is Computer controlled</label>
                             </form>
