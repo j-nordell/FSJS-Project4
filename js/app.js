@@ -67,16 +67,13 @@ class Player {
 
 class Game {
     constructor() {
-        this.gameOver = false;
-        this.gameWinner = 0;
-        this.movesCount = 0;
-        this.matrix = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
         this.player1 = new Player("Player 1", `url("img/o.svg")`);
         this.player2 = new Player("Computer", `url("img/x.svg")`);
         this.activePlayer = this.player1;
         this.startView = new View(startHTML, "start");
         this.gameView = new View(gameHTML, "board");
         this.finishView = new View(finishHTML, "finish");
+        this.reset();
     }
 
     swapPlayer() {
@@ -96,8 +93,8 @@ class Game {
 
     checkWin() {
         // Check for diagonal win. If true, game winner is one with middle box marked
-        if((this.matrix[0][0] == this.matrix[1][1] && this.matrix[2][2] && this.matrix != 0) || 
-            (this.matrix[0][2] == this.matrix[1][1] && this.matrix[1][1] == this.matrix[2][0] && this.matrix != 0)) {
+        if((this.matrix[0][0] == this.matrix[1][1] && this.matrix[1][1] == this.matrix[2][2] && this.matrix[1][1] != 0) || 
+            (this.matrix[0][2] == this.matrix[1][1] && this.matrix[1][1] == this.matrix[2][0] && this.matrix[1][1] != 0)) {
                 this.gameWinner = this.matrix[1][1];
         }
 
@@ -113,6 +110,12 @@ class Game {
                 }
             }
        }   
+    }
+    reset() {
+        this.gamOver = false;
+        this.gameWinner = 0;
+        this.movesCount = 0;
+        this.matrix = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
     }
 }
 
@@ -140,37 +143,33 @@ class View {
         element.addEventListener(eventType, action);
     }
  
-     unbindUIActions(element, eventType, action) {
-         element.removeEventListener(eventType, action);
-     }
- 
-     highlightPlayer(playerBox) {
-         playerBox.classList.add("active");
-     }
+    highlightPlayer(playerBox) {
+        playerBox.classList.add("active");
+    }
      
-     unhighlightPlayer(playerBox) {
-         playerBox.classList.remove("active");
-     }
+    unhighlightPlayer(playerBox) {
+        playerBox.classList.remove("active");
+    }
 
-     // Specifically for adding appropriate CSS classes based on winner/tie on finish view
-     addWinClass() {
-         let winDiv = document.getElementById('finish');
-         winDiv.classList.remove("screen-win-tie", "screen-win-one", "screen-win-two"); 
-         if(game.gameWinner == 0) {
-             winDiv.classList.add("screen-win-tie");
-         } else if(game.gameWinner == game.player1) {
-             winDiv.classList.add("screen-win-one");   
-         } else {
-             winDiv.classList.add("screen-win-two");
-         }
-     }
+    // Specifically for adding appropriate CSS classes based on winner/tie on finish view
+    addWinClass() {
+        let winDiv = document.getElementById('finish');
+        winDiv.classList.remove("screen-win-tie", "screen-win-one", "screen-win-two"); 
+        if(game.gameWinner == 0) {
+            winDiv.classList.add("screen-win-tie");
+        } else if(game.gameWinner == game.player1) {
+            winDiv.classList.add("screen-win-one");   
+        } else {
+            winDiv.classList.add("screen-win-two");
+        }
+    }
 
-     // Specifically for showing win/tie message on finish view
-     showWinMessage() {
-         let winMessage = document.getElementsByClassName("message")[0];
-         let message = game.gameWinner == 0 ? "It's a tie!" : "Winner!";
-         winMessage.textContent = message;
-     }
+    // Specifically for showing win/tie message on finish view
+    showWinMessage() {
+        let winMessage = document.getElementsByClassName("message")[0];
+        let message = game.gameWinner == 0 ? "It's a tie!" : `${game.gameWinner.name} Wins!`;
+        winMessage.textContent = message;
+    }
  }
 
 // Create game
@@ -198,7 +197,6 @@ for(let square of squares) {
     game.gameView.bindUIActions(square, "click", markSquare);
 }
 
-
 // Function to set up the views
 function setUpViews() {
     game.startView.addHTML();
@@ -206,6 +204,7 @@ function setUpViews() {
     game.finishView.addHTML();
 }
 
+// Function to shift between the three views
 function displayView(viewToShow) {
     switch(viewToShow) {
         case game.startView:
@@ -218,8 +217,11 @@ function displayView(viewToShow) {
             game.startView.switchOff();
             game.finishView.switchOff();
             game.gameView.switchOn();
-            game.gameView.highlightPlayer(document.getElementById("player1"));
+            game.gameView.highlightPlayer(game.activePlayer == game.player1 ? playerOneBox : playerTwoBox);
             document.getElementsByTagName('h2')[0].textContent = `${game.player1.name} vs ${game.player2.name}`;
+            if(game.activePlayer == game.player2) {
+                getRandomSquare().click();
+            }
             break;
         case game.finishView:
             game.startView.switchOff();
@@ -234,12 +236,14 @@ game.startView.bindUIActions(startButton, "click", () => {
     displayView(game.gameView);
 });
 
+// Grab the player's name from the input
 game.startView.bindUIActions(document.getElementsByTagName("form")[0], "submit", (e) => {
     e.preventDefault();
     game.player1.name = !playerNameInput.value ? "Human" : playerNameInput.value;
     displayView(game.gameView);
 });
 
+// Make the new game button clickable and load the game board
 game.finishView.bindUIActions(newGameButton, "click", () => {
     resetBoard();
     displayView(game.gameView);
@@ -279,9 +283,7 @@ function markSquare(element) {
 
 // Reset the game board and game defaults
 function resetBoard() {
-    game.matrix = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
-    game.movesCount = 0;
-    game.gameWinner = 0;
+    game.reset();
     for(let square of squares) {
         square.classList.remove("box-filled-1", "box-filled-2");
         square.style.pointerEvents = "auto";
