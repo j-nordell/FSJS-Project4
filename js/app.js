@@ -111,6 +111,8 @@ class Game {
             }
        }   
     }
+
+    // Set defaults for the game that should be reset without creating a new instance
     reset() {
         this.gamOver = false;
         this.gameWinner = 0;
@@ -302,6 +304,7 @@ function getRandomSquare() {
     return squares[row * 3 + col];
 }
 
+// Generate a random number between 0 and 2 for rows and columns
 function randomIndex() {
     return Math.floor(Math.random() * 3);
 }
