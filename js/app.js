@@ -258,13 +258,15 @@ function markSquare(element) {
     element.target.style.pointerEvents = "none";
     game.movesCount++;
     game.checkWin();
+
     if(game.gameWinner || game.movesCount == 9) {
         game.finishView.addWinClass();
         game.finishView.showWinMessage();
         displayView(game.finishView);
     }
+
     if(game.activePlayer == game.player2) {
-        let randomSquare = getRandomSquare();
+        getRandomSquare().click();
     }
 }
 
@@ -280,10 +282,19 @@ function resetBoard() {
 }
 
 function getRandomSquare() {
-    let randomNumber = Math.floor(Math.random() * 9);
-    let randomSquare = game.matrix[randomNumber / 3][randomNumber % 3];
-    console.log(randomSquare);
-    return randomSquare;
+    let row = randomIndex();
+    let col = randomIndex();
+    
+    while(game.matrix[row][col] != 0) {
+        row = randomIndex();
+        col = randomIndex();
+    }
+
+    return squares[row * 3 + col];
+}
+
+function randomIndex() {
+    return Math.floor(Math.random() * 3);
 }
 
 
